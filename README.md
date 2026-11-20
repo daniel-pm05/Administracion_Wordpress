@@ -5,19 +5,46 @@
 
 En aquest Sprint s'administra el portal corporatiu de PorçonsTech des del terminal amb **WP-CLI**: plugins, temes, actualitzacions, configuració del lloc i verificació final.
 
+## Estructura del repositori
+
+```
+.
+├── README.md
+└── imatges/
+    ├── e1-wp-info.png
+    ├── e2-plugin-config.png
+    ├── e2-plugin-list.png
+    ├── e2-login-nueva-url.png
+    ├── e3-theme-list.png
+    ├── e3-portal-tema.png
+    ├── e4-check-update-core.png
+    ├── e4-core-update.png
+    ├── e4-plugin-update.png
+    ├── e4-theme-update.png
+    ├── e5-permalinks.png
+    ├── e5-idioma-en.png
+    ├── e5-panel-ingles.png
+    ├── e5-entrada-url.png
+    ├── e6-verificacion.png
+    ├── e6-portal-final.png
+    └── permisos-wp-core-version.png
+```
+
+---
+
 ## E1 · WP-CLI instal·lat i operatiu
 
 Descàrrega del `.phar` oficial, permisos d'execució i instal·lació com a comandament `wp`:
 
 ```bash
-cd \~
+cd ~
 curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 chmod +x wp-cli.phar
 sudo mv wp-cli.phar /usr/local/bin/wp
 wp --info
 ```
 
-!\[WP-CLI instal·lat](imatges/e1-wp-info.png)
+![WP-CLI instal·lat](imatges/e1-wp-info.png)
 
 **Què és WP-CLI i quin avantatge té?**
 WP-CLI (WordPress Command Line Interface) és una eina per administrar WordPress des del terminal. A diferència de `wp-admin`, permet treballar de forma remota per SSH, és més ràpida i es pot automatitzar amb scripts, cosa que facilita les tasques repetitives en servidors.
@@ -28,23 +55,23 @@ Es va assignar l'usuari actual com a propietari de `/var/www/html` mantenint `ww
 
 ```bash
 sudo chown -R $USER:www-data /var/www/html
-sudo find /var/www/html -type d -exec chmod 775 {} \\;
-sudo find /var/www/html -type f -exec chmod 664 {} \\;
+sudo find /var/www/html -type d -exec chmod 775 {} \;
+sudo find /var/www/html -type f -exec chmod 664 {} \;
 cd /var/www/html
 wp core version
 ```
 
-!\[Permisos i versió del core](imatges/permisos-wp-core-version.png)
+![Permisos i versió del core](imatges/permisos-wp-core-version.png)
 
-\---
+---
 
 ## E2 · Gestió de plugins amb WP-CLI
 
 Es va treballar amb el plugin **wps-hide-login**: es va configurar la ruta d'accés al panell, es va comprovar al navegador, i es va desactivar i tornar a activar.
 
 ```bash
-wp option update whl\_page "acces-porconstech"
-wp option get whl\_page
+wp option update whl_page "acces-porconstech"
+wp option get whl_page
 wp plugin deactivate wps-hide-login
 wp plugin list
 wp plugin activate wps-hide-login
@@ -52,20 +79,20 @@ wp plugin activate wps-hide-login
 
 **Configuració de la nova ruta**
 
-!\[Configuració del plugin](imatges/e2-plugin-config.png)
+![Configuració del plugin](imatges/e2-plugin-config.png)
 
 **`wp plugin list` amb el plugin desactivat**
 
-!\[Llista de plugins](imatges/e2-plugin-list.png)
+![Llista de plugins](imatges/e2-plugin-list.png)
 
 **Comprovació al navegador:** el login ja no està a `/wp-admin`, ara respon a `/acces-porconstech/`
 
-!\[Login a la nova URL](imatges/e2-login-nueva-url.png)
+![Login a la nova URL](imatges/e2-login-nueva-url.png)
 
 **Quina operació s'ha fet i com es comprova?**
-Es va configurar l'opció `whl\_page` del plugin, i es va desactivar i reactivar. El canvi es va comprovar amb `wp option get whl\_page`, amb `wp plugin list` (columna `status`) i obrint `/acces-porconstech/` al navegador, on apareix el formulari de login.
+Es va configurar l'opció `whl_page` del plugin, i es va desactivar i reactivar. El canvi es va comprovar amb `wp option get whl_page`, amb `wp plugin list` (columna `status`) i obrint `/acces-porconstech/` al navegador, on apareix el formulari de login.
 
-\---
+---
 
 ## E3 · Gestió de temes amb WP-CLI
 
@@ -80,16 +107,16 @@ wp theme activate porconstech-child
 wp theme delete twentytwentytwo
 ```
 
-!\[Llista de temes](imatges/e3-theme-list.png)
+![Llista de temes](imatges/e3-theme-list.png)
 
 **Portal amb el tema de prova actiu**
 
-!\[Portal amb el tema nou](imatges/e3-portal-tema.png)
+![Portal amb el tema nou](imatges/e3-portal-tema.png)
 
 **Com sé quin tema està actiu?**
 Amb `wp theme list`, la columna `status` mostra `active` per al tema en ús (i `parent` per al tema pare d'un tema fill). També es pot consultar amb `wp option get stylesheet` i `wp option get template`.
 
-\---
+---
 
 ## E4 · Actualitzacions de WordPress
 
@@ -104,24 +131,24 @@ wp theme update --all
 
 **Core: comprovació**
 
-!\[Comprovació del core](imatges/e4-check-update-core.png)
+![Comprovació del core](imatges/e4-check-update-core.png)
 
 **Core: actualització**
 
-!\[Actualització del core](imatges/e4-core-update.png)
+![Actualització del core](imatges/e4-core-update.png)
 
 **Plugins**
 
-!\[Actualització de plugins](imatges/e4-plugin-update.png)
+![Actualització de plugins](imatges/e4-plugin-update.png)
 
 **Temes**
 
-!\[Actualització de temes](imatges/e4-theme-update.png)
+![Actualització de temes](imatges/e4-theme-update.png)
 
 **Per què és important mantindre-ho actualitzat?**
 Les actualitzacions corregeixen errors i vulnerabilitats de seguretat, i aporten millores de rendiment i compatibilitat. Un core, plugin o tema desactualitzat és una de les vies d'atac més habituals contra WordPress.
 
-\---
+---
 
 ## E5 · Configuració realitzada amb WP-CLI
 
@@ -131,35 +158,35 @@ S'han fet tres configuracions des del terminal: els **enllaços permanents**, l'
 
 ```bash
 wp rewrite structure '/%postname%/' --hard
-wp option get permalink\_structure
+wp option get permalink_structure
 ```
 
-!\[Enllaços permanents](imatges/e5-permalinks.png)
+![Enllaços permanents](imatges/e5-permalinks.png)
 
 **Comprovació:** una entrada és accessible amb la nova estructura d'URL (`/hola-mundo/`)
 
-!\[Entrada amb URL nova](imatges/e5-entrada-url.png)
+![Entrada amb URL nova](imatges/e5-entrada-url.png)
 
 ### Idioma
 
 ```bash
 wp language core list
-wp language core install en\_US --activate
-wp site switch-language es\_ES
+wp language core install en_US --activate
+wp site switch-language es_ES
 ```
 
-!\[Idioma en anglés](imatges/e5-idioma-en.png)
+![Idioma en anglés](imatges/e5-idioma-en.png)
 
 **Comprovació al login amb l'idioma canviat**
 
-!\[Login en anglés](imatges/e5-panel-ingles.png)
+![Login en anglés](imatges/e5-panel-ingles.png)
 
-Després es va tornar a l'idioma original (`es\_ES`).
+Després es va tornar a l'idioma original (`es_ES`).
 
 **Quina configuració s'ha modificat i com es comprova?**
-S'han configurat els enllaços permanents amb `wp rewrite structure` i es va comprovar amb `wp option get permalink\_structure` i obrint una entrada amb la URL nova. També es va canviar l'idioma amb `wp language core install --activate` i es va comprovar al panell de login.
+S'han configurat els enllaços permanents amb `wp rewrite structure` i es va comprovar amb `wp option get permalink_structure` i obrint una entrada amb la URL nova. També es va canviar l'idioma amb `wp language core install --activate` i es va comprovar al panell de login.
 
-\---
+---
 
 ## E6 · Portal final verificat
 
@@ -172,25 +199,25 @@ wp theme list
 curl -I http://localhost/
 ```
 
-!\[Verificació al terminal](imatges/e6-verificacion.png)
+![Verificació al terminal](imatges/e6-verificacion.png)
 
-!\[Portal final](imatges/e6-portal-final.png)
+![Portal final](imatges/e6-portal-final.png)
 
 **Quines comprovacions s'han fet?**
 Es va revisar la versió del core, que el plugin `wps-hide-login` està actiu, que el tema actiu és `porconstech-child`, que el servidor respon `HTTP/1.1 200 OK` i que la portada i el login carreguen correctament al navegador.
 
-\---
+---
 
 ## Incidències resoltes durant la pràctica
 
-|Problema|Causa|Solució|
-|-|-|-|
-|`curl` descarregava un fitxer de 14 bytes (`404: Not Found`)|URL escrita amb `gh.pages` en lloc de `gh-pages`|Esborrar el fitxer i repetir la descàrrega amb la URL correcta|
-|`mariadb.service not found`|El servei de la base de dades es diu `mysql`|Comprovar l'estat amb `systemctl is-active mysql`|
-|`/acces-porconstech` donava 404 d'Apache|Enllaços permanents sense configurar i bloc de WordPress buit a `.htaccess`|`wp rewrite structure '/%postname%/' --hard` i regles de reescriptura a `.htaccess`|
-|El login no carregava (`ERR\_CONNECTION\_TIMED\_OUT`)|La IP pública de la instància havia canviat i WordPress apuntava a l'antiga|`wp option update siteurl` i `wp option update home` amb la IP actual|
+| Problema | Causa | Solució |
+|---|---|---|
+| `curl` descarregava un fitxer de 14 bytes (`404: Not Found`) | URL escrita amb `gh.pages` en lloc de `gh-pages` | Esborrar el fitxer i repetir la descàrrega amb la URL correcta |
+| `mariadb.service not found` | El servei de la base de dades es diu `mysql` | Comprovar l'estat amb `systemctl is-active mysql` |
+| `/acces-porconstech` donava 404 d'Apache | Enllaços permanents sense configurar i bloc de WordPress buit a `.htaccess` | `wp rewrite structure '/%postname%/' --hard` i regles de reescriptura a `.htaccess` |
+| El login no carregava (`ERR_CONNECTION_TIMED_OUT`) | La IP pública de la instància havia canviat i WordPress apuntava a l'antiga | `wp option update siteurl` i `wp option update home` amb la IP actual |
 
-\---
+---
 
 ## Tasques finals · PorçonsTech
 
@@ -199,20 +226,17 @@ Es va revisar la versió del core, que el plugin `wps-hide-login` està actiu, q
 **2. Plugins.** Procés: instal·lar (`wp plugin install NOM`), activar (`wp plugin activate NOM`), comprovar que funciona (`wp plugin list` i prova al navegador), actualitzar (`wp plugin update NOM`) i, si ja no cal, desactivar i eliminar (`wp plugin deactivate NOM` i `wp plugin delete NOM`).
 
 **3. Usuaris i permisos.**
-
-* Administradora del sistema: **Administrador**, perquè gestiona tot el lloc.
-* Persona que revisa i publica continguts: **Editor**, perquè pot publicar i editar entrades de tothom sense gestionar el sistema.
-* Persona que només publica les seues entrades: **Autor**, perquè gestiona únicament les seues pròpies entrades. Així s'aplica el principi de mínim privilegi.
+- Administradora del sistema: **Administrador**, perquè gestiona tot el lloc.
+- Persona que revisa i publica continguts: **Editor**, perquè pot publicar i editar entrades de tothom sense gestionar el sistema.
+- Persona que només publica les seues entrades: **Autor**, perquè gestiona únicament les seues pròpies entrades. Així s'aplica el principi de mínim privilegi.
 
 **4. Actualitzacions.** Cal mantindre actualitzats WordPress, els plugins i els temes per corregir vulnerabilitats, errors i incompatibilitats. Abans d'una actualització important es comprova que hi ha una còpia de seguretat recent (fitxers i base de dades), la compatibilitat de plugins i tema amb la nova versió i, si és possible, es prova en un entorn de proves.
 
 **5. Backup i exportació.**
-
-* **Còpia de seguretat completa** (fitxers + base de dades): recuperar el lloc sencer després d'una avaria del servidor.
-* **Exportació WXR/XML**: traslladar entrades i pàgines a una altra instal·lació WordPress.
-* **CSV/JSON**: analitzar dades en un full de càlcul (CSV) o consumir-les des d'una aplicació (JSON).
+- **Còpia de seguretat completa** (fitxers + base de dades): recuperar el lloc sencer després d'una avaria del servidor.
+- **Exportació WXR/XML**: traslladar entrades i pàgines a una altra instal·lació WordPress.
+- **CSV/JSON**: analitzar dades en un full de càlcul (CSV) o consumir-les des d'una aplicació (JSON).
 
 **6. Sindicació.** Un canal RSS és un document XML que WordPress genera automàticament amb les últimes entrades (`/feed/`). Una altra aplicació o lloc web pot consultar-lo periòdicament i mostrar les novetats de PorçonsTech sense copiar-les manualment.
 
 **7. Anàlisi d'accessos.** El fitxer `/var/log/apache2/access.log` registra la IP del client, la data i hora, el mètode HTTP, el recurs sol·licitat i el codi de resposta. Ajuda l'administrador a detectar errors (404, 500), veure quins recursos es consulten més, identificar accessos sospitosos (per exemple, intents contra `/wp-admin`) i investigar problemes del servidor.
-
